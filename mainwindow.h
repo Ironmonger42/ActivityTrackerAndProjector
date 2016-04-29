@@ -50,6 +50,10 @@ private slots:
     void on_pushButton_add_pi_clicked();
     void on_pushButton_add_ncc_clicked();
 
+    //Save and Load Data
+    void saveData();
+    void loadData();
+
     //Other
     void on_checkBox_clicked(bool checked);
     void on_pushButton_Refresh_released();
@@ -60,10 +64,7 @@ private slots:
     void refreshGraph();
     void checkActualButtons();
 
-    //Save and Load Data
-    void saveData();
-    void loadData();
-    void on_pushButton_save_clicked();
+
 
 private:
     Ui::MainWindow *ui;

@@ -21,7 +21,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+/*
+ * makePlot()
+ *
+ * This function deals with creating a fully modifable bar graph based on the totals
+ * of the surveys. It fully sets up the graph with plottting, the legend, and anything related
+ * with the graphing.
+*/
 void MainWindow::makePlot()
 {
      ui -> customPlot->clearPlottables();
@@ -78,7 +84,7 @@ void MainWindow::makePlot()
     else
         ui->customPlot->yAxis->setRange(0, actual_total[0]+1);
 
-    ui->customPlot->yAxis->setPadding(5); // a bit more space to the left border
+    ui->customPlot->yAxis->setPadding(5);
     ui->customPlot->yAxis->setLabel("Total Surveys Completed");
     ui->customPlot->yAxis->grid()->setSubGridVisible(true);
     QPen gridPen;
@@ -155,7 +161,6 @@ void MainWindow::refreshGraph()
     expected_total[3] = convertPercent(expected_total[2], expected_percent[3]);
     expected_total[4] = convertPercent(expected_total[3], expected_percent[4]);
 
-    //ui -> customPlot->clearPlottables(); // clear the plot
     MainWindow::makePlot(); //Call makePlot, which sets up the graph / plot again.
     ui -> customPlot->replot(); //replot the values that were stored in memory.
 }
@@ -167,7 +172,6 @@ void MainWindow::refreshGraph()
  * It calls the refreshGraph() function.
  *
 */
-
 void MainWindow::on_pushButton_Refresh_released()
 {
     refreshGraph();
@@ -424,6 +428,14 @@ void MainWindow::checkActualButtons()
 }
 
 
+/*
+ * saveData()
+ *
+ * This function uses Qts settings which is used to save data even after the user exits the program.
+ * The only part thats important to store is the actual totals which is when the user inputs when they have
+ * completed a new survey.
+*/
+
 void MainWindow::saveData()
 {
     QSettings settings("OrganizationName", "ApplicationName");
@@ -436,6 +448,12 @@ void MainWindow::saveData()
 
 }
 
+/*
+ * loadData()
+ *
+ * Loads the actual totals for each of the survey types from memory into the program to
+ * be used from a past use of the program.
+*/
 void MainWindow::loadData()
 {
     QSettings settings("OrganizationName", "ApplicationName");
@@ -447,12 +465,15 @@ void MainWindow::loadData()
     actual_total[4] = settings.value("actual_total_ncc").toInt();
 }
 
+
+/*
+ * closeEvent()
+ *
+ * This event is called anytime the program exits, usally when the user presses the X button.
+ * It calls saveData() to save the actual totals
+*/
 void MainWindow::closeEvent (QCloseEvent *event)
 {
     saveData();
 }
 
-void MainWindow::on_pushButton_save_clicked()
-{
-    saveData();
-}
