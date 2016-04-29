@@ -1,1 +1,0 @@
-This is for note taking for the program. Anything the user should know should be in here.
