@@ -36,16 +36,15 @@ void MainWindow::makePlot()
     QCPBars *theoretical = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
     QCPBars *actual = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
     QCPBars *expected = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
-    ui->customPlot->addPlottable(theoretical);
     ui->customPlot->addPlottable(actual);
     ui->customPlot->addPlottable(expected);
-
+    ui->customPlot->addPlottable(theoretical);
 
     // set names and colors:
     QPen pen;
     pen.setWidthF(1.2);
 
-    theoretical ->setName("Theoretical");
+    theoretical ->setName("Personal Goal");
     pen.setColor(QColor(255, 131, 0));
     theoretical ->setPen(pen);
     theoretical ->setBrush(QColor(255, 131, 0, 50));
@@ -55,10 +54,10 @@ void MainWindow::makePlot()
     actual->setPen(pen);
     actual->setBrush(QColor(1, 92, 191, 50));
 
-    expected->setName("Expected");
+    expected->setName("Trainer Goal");
     pen.setColor(QColor(150, 222, 0));
     expected->setPen(pen);
-    expected->setBrush(QColor(150, 222, 0, 70));
+    expected->setBrush(QColor(150, 222, 0, 50));
 
     // prepare x axis with labels:
     QVector<double> actual_ticks , expected_ticks, theoretical_ticks;
@@ -80,9 +79,9 @@ void MainWindow::makePlot()
 
     // prepare y axis:
     if(actual_total[0] == 0)
-        ui->customPlot->yAxis->setRange(0, 5);
+        ui->customPlot->yAxis->setRange(0, 9);
     else
-        ui->customPlot->yAxis->setRange(0, actual_total[0]+1);
+        ui->customPlot->yAxis->setRange(0, actual_total[0]+2);
 
     ui->customPlot->yAxis->setPadding(5);
     ui->customPlot->yAxis->setLabel("Total Surveys Completed");
@@ -114,7 +113,7 @@ void MainWindow::makePlot()
     legendPen.setColor(QColor(130, 130, 130, 200));
     ui->customPlot->legend->setBorderPen(legendPen);
     QFont legendFont = font();
-    legendFont.setPointSize(10);
+    legendFont.setPointSize(15);
     ui->customPlot->legend->setFont(legendFont);
 
 }
@@ -278,28 +277,62 @@ void MainWindow::on_pushButton_add_ncc_clicked()
  * The functions below are triggered by the subtract buttons and subtract a actual survey from the
  * designated survey (prospect, pie, fli, pi, or ncc).
  * Then refresh the graph to display the new infromation.
+ * These functions also subtract one from the value infront of them, FLI - 1 does FLI -1, PI -1, and NCC-1
 */
 void MainWindow::on_pushButton_sub_prospect_clicked()
 {
     actual_total[0] -=1;
+
+    if(actual_total[1] > 0)
+        actual_total[1] -=1;
+
+    if(actual_total[2] > 0)
+        actual_total[2] -=1;
+
+    if(actual_total[3] > 0)
+        actual_total[3] -=1;
+
+    if(actual_total[4] > 0)
+        actual_total[4] -=1;
+
     refreshGraph();
 }
 
 void MainWindow::on_pushButton_sub_pie_clicked()
 {
     actual_total[1] -=1;
+
+    if(actual_total[2] > 0)
+        actual_total[2] -=1;
+
+    if(actual_total[3] > 0)
+        actual_total[3] -=1;
+
+    if(actual_total[4] > 0)
+        actual_total[4] -=1;
+
     refreshGraph();
 }
 
 void MainWindow::on_pushButton_sub_fli_clicked()
 {
     actual_total[2] -=1;
+
+    if(actual_total[3] > 0)
+        actual_total[3] -=1;
+
+    if(actual_total[4] > 0)
+        actual_total[4] -=1;
+
     refreshGraph();
 }
 
 void MainWindow::on_pushButton_sub_pi_clicked()
 {
     actual_total[3] -=1;
+
+    if(actual_total[4] > 0)
+        actual_total[4] -=1;
     refreshGraph();
 }
 
@@ -438,7 +471,7 @@ void MainWindow::checkActualButtons()
 
 void MainWindow::saveData()
 {
-    QSettings settings("OrganizationName", "ApplicationName");
+    QSettings settings("TylerGeoffrey", "ActivityTracker");
 
     settings.setValue("actual_total_prospect", actual_total[0]);
     settings.setValue("actual_total_pie", actual_total[1]);
@@ -456,7 +489,7 @@ void MainWindow::saveData()
 */
 void MainWindow::loadData()
 {
-    QSettings settings("OrganizationName", "ApplicationName");
+    QSettings settings("TylerGeoffrey", "ActivityTracker");
 
     actual_total[0] = settings.value("actual_total_prospect").toInt();
     actual_total[1] = settings.value("actual_total_pie").toInt();
@@ -471,9 +504,9 @@ void MainWindow::loadData()
  *
  * This event is called anytime the program exits, usally when the user presses the X button.
  * It calls saveData() to save the actual totals
+ * Warning: Not a threat but we do not need to use *event
 */
 void MainWindow::closeEvent (QCloseEvent *event)
 {
     saveData();
 }
-

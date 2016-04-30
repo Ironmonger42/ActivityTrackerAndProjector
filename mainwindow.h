@@ -65,7 +65,6 @@ private slots:
     void checkActualButtons();
 
 
-
 private:
     Ui::MainWindow *ui;
 
